@@ -1,8 +1,7 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { Environment, Float, View } from "@react-three/drei";
-import FloatingCan from "@/components/FloatingCan";
+import { View } from "@react-three/drei";
 
 
 
