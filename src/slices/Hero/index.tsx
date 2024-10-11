@@ -6,12 +6,15 @@ import { PrismicRichText, SliceComponentProps } from "@prismicio/react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { View } from "@react-three/drei";
 
 import { Bounded } from "@/components/Bounded";
 import Button from "@/components/Button";
 import { TextSplitter } from "@/components/TextSplitter";
-import { View } from "@react-three/drei";
 import Scene from "./Scene";
+import { Bubbles } from "./Bubbles";
+import { useStore } from "@/hooks/useStore";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -24,7 +27,17 @@ export type HeroProps = SliceComponentProps<Content.HeroSlice>;
  * Component for "Hero" Slices.
  */
 const Hero = ({ slice }: HeroProps): JSX.Element => {
-  useGSAP(() => {
+
+  const ready = useStore((state) => state.ready);
+
+  const isDesktop = useMediaQuery("(min-width: 768px)", true);
+
+
+
+  useGSAP(
+    () => {
+    if (!ready && isDesktop) return;
+
     const introTl = gsap.timeline();
 
     introTl
@@ -79,7 +92,7 @@ const Hero = ({ slice }: HeroProps): JSX.Element => {
         ease: "back.out(3)",
         duration: .5
     });
-  });
+  }, {dependencies: [ready, isDesktop]});
 
   return (
     <Bounded
@@ -87,30 +100,38 @@ const Hero = ({ slice }: HeroProps): JSX.Element => {
       data-slice-variation={slice.variation}
       className="hero opacity-0"
     >
-      <View className="hero-scene pointer-events-none sticky top-0 z-50 -mt-[100vh] hidden h-screen w-screen md:block">
-        <Scene />
-      </View>
+      {isDesktop && (
+        <View className="hero-scene pointer-events-none sticky top-0 z-50 -mt-[100vh] hidden h-screen w-screen md:block">
+          <Scene />
+          <Bubbles count={300} speed={2} repeat={true} />
+        </View>
+      )}
 
       <div className="grid">
-          <div className="grid h-screen place-items-center">
-            <div className="grid auto-rows-min place-items-center text-center">
-              <h1 className="hero-header text-7xl font-black uppercase leading-[.8] text-orange-500 md:text-[9rem] lg:text-[13rem]">
-                <TextSplitter 
+        <div className="grid h-screen place-items-center">
+          <div className="grid auto-rows-min place-items-center text-center">
+            <h1 className="hero-header text-7xl font-black uppercase leading-[.8] text-orange-500 md:text-[9rem] lg:text-[13rem]">
+              <TextSplitter
                 text={asText(slice.primary.heading)}
                 wordDisplayStyle="block"
                 className="hero-header-word"
-                />
-              </h1>
-              <div className="hero-subheading mt-12 text-5xl font-semibold text-sky-950 lg:text-6xl">
-                <PrismicRichText field={slice.primary.subheading} />
-              </div>
-              <div className="hero-body text-2xl font-normal text-sky-950">
-                <PrismicRichText field={slice.primary.body} />
-              </div>
-              <Button buttonLink={slice.primary.button_link} buttonText={slice.primary.button_text} className="hero-button mt-12"/>
+              />
+            </h1>
+            <div className="hero-subheading mt-12 text-5xl font-semibold text-sky-950 lg:text-6xl">
+              <PrismicRichText field={slice.primary.subheading} />
             </div>
+            <div className="hero-body text-2xl font-normal text-sky-950">
+              <PrismicRichText field={slice.primary.body} />
+            </div>
+            <Button
+              buttonLink={slice.primary.button_link}
+              buttonText={slice.primary.button_text}
+              className="hero-button mt-12"
+            />
           </div>
-          <div className="text-side relative z-[80] grid h-screen items-center gap-4 md:grid-cols-2">
+        </div>
+
+        <div className="text-side relative z-[80] grid h-screen items-center gap-4 md:grid-cols-2">
           <PrismicNextImage
             className="w-full md:hidden"
             field={slice.primary.cans_image}
