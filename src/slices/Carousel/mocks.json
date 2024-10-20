@@ -1,0 +1,31 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"heading": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Amet fugiat culpa minim do pariatur aute quis Lorem laborum sit labore laborum ex. Id ipsum non aliquip sint nulla nostrud."
+						}
+					}
+				]
+			},
+			"price_copy": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "heading1",
+						"content": {
+							"text": "Where"
+						}
+					}
+				]
+			}
+		},
+		"items": []
+	}
+]
