@@ -14,7 +14,7 @@ import gsap from "gsap";
 
 import FloatingCan from "@/components/FloatingCan";
 import { SodaCanProps } from "@/components/SodaCan";
-import { ArrowIcon } from "./Arrowicon";
+import { ArrowIcon } from "./ArrowIcon";
 import { WavyCircles } from "./WavyCircles";
 
 const SPINS_ON_CHANGE = 4;
