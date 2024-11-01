@@ -1,7 +1,7 @@
 "use client";
 
-import { Content, asText } from "@prismicio/client";
-import { PrismicNextImage, PrismicNextLink } from "@prismicio/next";
+import { asText, Content } from "@prismicio/client";
+import { PrismicNextImage } from "@prismicio/next";
 import { PrismicRichText, SliceComponentProps } from "@prismicio/react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -16,8 +16,8 @@ import { Bubbles } from "./Bubbles";
 import { useStore } from "@/hooks/useStore";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
-
 gsap.registerPlugin(useGSAP, ScrollTrigger);
+
 /**
  * Props for `Hero`.
  */
@@ -27,72 +27,79 @@ export type HeroProps = SliceComponentProps<Content.HeroSlice>;
  * Component for "Hero" Slices.
  */
 const Hero = ({ slice }: HeroProps): JSX.Element => {
-
   const ready = useStore((state) => state.ready);
-
   const isDesktop = useMediaQuery("(min-width: 768px)", true);
-
-
 
   useGSAP(
     () => {
-    if (!ready && isDesktop) return;
+      if (!ready && isDesktop) return;
 
-    const introTl = gsap.timeline();
+      const introTl = gsap.timeline();
 
-    introTl
-    .set(".hero", {opacity: 1})
-    .from(".hero-header-word", {
-      scale: 3,
-      opacity: 0,
-      ease: "power4.in",
-      delay: 0.3,
-      stagger: 1,
-    })
-    .from(".hero-subheading", {
-      y: 30,
-      opacity: 0,
+      introTl
+        .set(".hero", { opacity: 1 })
+        .from(".hero-header-word", {
+          scale: 3,
+          opacity: 0,
+          ease: "power4.in",
+          delay: 0.3,
+          stagger: 1,
+        })
+        .from(
+          ".hero-subheading",
+          {
+            opacity: 0,
+            y: 30,
+          },
+          "+=.8",
+        )
+        .from(".hero-body", {
+          opacity: 0,
+          y: 10,
+        })
+        .from(".hero-button", {
+          opacity: 0,
+          y: 10,
+          duration: 0.6,
+        });
+
+      const scrollTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: ".hero",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1.5,
+        },
+      });
+
+      scrollTl
+        .fromTo(
+          "body",
+          {
+            backgroundColor: "#FDE047",
+          },
+          {
+            backgroundColor: "#D9F99D",
+            overwrite: "auto",
+          },
+          1,
+        )
+        .from(".text-side-heading .split-char", {
+          scale: 1.3,
+          y: 40,
+          rotate: -25,
+          opacity: 0,
+          stagger: 0.1,
+          ease: "back.out(3)",
+          duration: 0.5,
+        })
+        .from(".text-side-body", {
+          y: 20,
+          opacity: 0,
+        });
     },
-    "+=.8"
-    )
-    .from(".hero-body", {
-      y: 10,
-      opacity: 0,
-    })
-    .from(".hero-button", {
-      y: 10,
-      opacity: 0,
-      duration: 0.6,
-    })
-    const scrollTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".hero",
-        start: "top top",
-        end: "bottom bottom",
-        scrub: 1.5,
-        markers: true,
-      },
-    });
-    scrollTl
-      .fromTo("body", { 
-        backgroundColor: "#FDE047"
-
-      }, { 
-        backgroundColor: "#D9F99D",
-        overwrite: "auto"
-      },
-      1,
-    )
-      .from(".text-side-heading .split-char", {
-        scale: 1.3,
-        y: 40,
-        rotate: -25,
-        opacity: 0,
-        stagger: .1,
-        ease: "back.out(3)",
-        duration: .5
-    });
-  }, {dependencies: [ready, isDesktop]});
+    { dependencies: [ready, isDesktop] },
+  );
 
   return (
     <Bounded
